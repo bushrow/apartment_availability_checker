@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apartment_check"
-description = "<project description>"
+description = "Check availability of apartments meeting certain criteria for a given property using custom logic."
 readme = "README.md"
 version = "0.0.1"
 authors = [{ name = "Charlie Bushrow", email = "charlie.bushrow@gmail.com" }]
