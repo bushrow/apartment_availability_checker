@@ -9,7 +9,7 @@ readme = "README.md"
 version = "0.0.1"
 authors = [{ name = "Charlie Bushrow", email = "charlie.bushrow@gmail.com" }]
 requires-python = ">= 3.7"
-dependencies = []
+dependencies = ["boto3", "bs4", "requests"]
 
 [project.optional-dependencies]
 test = ["botocore", "pytest"]

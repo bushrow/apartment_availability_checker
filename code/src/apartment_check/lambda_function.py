@@ -6,7 +6,7 @@ import boto3
 from apartment_check.properties import check_current_listings_elle_west
 from apartment_check.util import send_notification
 
-BUCKET = "apartment_check_tracking_bucket"
+BUCKET = "apartment-check-tracking-bucket"
 PREV_CHECK_KEY = "last_checked_unit_nums.json"
 TOPIC_ARN = os.environ["SNS_TOPIC_ARN"]
 
@@ -37,5 +37,5 @@ def lambda_handler(event: dict, context: dict) -> dict:
         )
     return {
         "status_code": 200,
-        "message": json.dumps("Hello World!"),
+        "message": json.dumps(content_str or "No changes."),
     }

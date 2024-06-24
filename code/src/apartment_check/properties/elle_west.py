@@ -69,16 +69,17 @@ def get_unit_availability(
             if unit_cell is None:
                 continue
             unit = unit_cell.text.strip()
-            unit = re.search("\d{4}", unit).group()
+            unit = re.search(r"\d{4}", unit).group()
             availability = tr.find(
                 "td", attrs={"class": "check-availability__cell--availability"}
             ).text.strip()
             available_now = availability.lower() == "available now"
             if available_now:
                 availability = dt.today().strftime("%b %d, %Y")
-            availability_dt = min(
-                dt.strptime(availability, "%b %d, %Y") + td(days=13),
-                dt.strptime(target_date, "%Y-%m-%d"),
+            available_on = dt.strptime(availability, "%b %d, %Y")
+            availability_dt = max(
+                min(available_on + td(days=13), dt.strptime(target_date, "%Y-%m-%d")),
+                available_on,
             )
             href = tr.find("a", attrs={"class": "check-availability__cell-link"}).attrs[
                 "href"
@@ -140,10 +141,10 @@ def get_floorplan_availability(
             )
             continue
         bed_ct, bath_ct, sq_ft = listing_info_items
-        bed_ct_re = re.match("^(\d(?:\.5)?) bed$", bed_ct, flags=re.IGNORECASE)
-        bath_ct_re = re.match("^(\d(?:\.5)?) bath$", bath_ct, flags=re.IGNORECASE)
+        bed_ct_re = re.match(r"^(\d(?:\.5)?) bed$", bed_ct, flags=re.IGNORECASE)
+        bath_ct_re = re.match(r"^(\d(?:\.5)?) bath$", bath_ct, flags=re.IGNORECASE)
         sq_ft_re = re.match(
-            "^((?:\d,?)?\d{3}) sq\.? ft\.?$", sq_ft, flags=re.IGNORECASE
+            r"^((?:\d,?)?\d{3}) sq\.? ft\.?$", sq_ft, flags=re.IGNORECASE
         )
         bed_ct_num = float(bed_ct_re.group(1)) if bed_ct_re else None
         bath_ct_num = float(bath_ct_re.group(1)) if bath_ct_re else None

@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Rule, Schedule } from 'aws-cdk-lib/aws-events';
 import { LambdaFunction as LambdaFunctionTgt } from 'aws-cdk-lib/aws-events-targets';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Code, Function, LayerVersion, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { Topic } from 'aws-cdk-lib/aws-sns';
@@ -14,7 +14,7 @@ export class InfraStack extends cdk.Stack {
     super(scope, id, props);
 
     new Bucket(this, 'apartment_check_tracking_bucket', {
-      bucketName: 'apartment_check_tracking_bucket',
+      bucketName: 'apartment-check-tracking-bucket',
     });
 
     const notificationTopic = new Topic(this, 'apartment_check_notification_topic', {
@@ -32,10 +32,16 @@ export class InfraStack extends cdk.Stack {
       ],
     });
 
+    const lambdaLayer = new LayerVersion(this, 'apartment_check_layer', {
+      code: Code.fromAsset('../code_layer/'),
+      compatibleRuntimes: [Runtime.PYTHON_3_12, Runtime.PYTHON_3_11, Runtime.PYTHON_3_10, Runtime.PYTHON_3_9, Runtime.PYTHON_3_8],
+    });
+
     const lambdaFunction = new Function(this, 'apartment_check_lambda', {
       functionName: 'apartment_check_lambda',
       runtime: Runtime.PYTHON_3_12,
-      code: Code.fromAsset('../code/'),
+      code: Code.fromAsset('../code/src/'),
+      layers: [lambdaLayer],
       environment: {
         SNS_TOPIC_ARN: notificationTopic.topicArn,
         APT_MIN_BEDS: '2',

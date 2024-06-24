@@ -5,6 +5,7 @@
     "infra": "bin/infra.js"
   },
   "scripts": {
+    "prebuild": "mkdir -p ../code_layer/python/ && python3 -m pip install --upgrade -r ../code/requirements.txt --target ../code_layer/python/",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",

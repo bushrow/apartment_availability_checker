@@ -2,10 +2,7 @@ import json
 from io import StringIO
 from typing import Any
 
-import boto3
-import botocore
-import botocore.errorfactory
-import botocore.exceptions
+from botocore.exceptions import ClientError
 
 
 def read_last_checked_units(
@@ -27,7 +24,7 @@ def read_last_checked_units(
                 .decode("utf-8")
             )
             prev_units = json.loads(json_str)
-        except botocore.exceptions.ClientError:
+        except ClientError:
             prev_units = {}
     else:
         raise SyntaxError(
