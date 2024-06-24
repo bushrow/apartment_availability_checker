@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apartment_check"
+description = "<project description>"
+readme = "README.md"
+version = "0.0.1"
+authors = [{ name = "Charlie Bushrow", email = "charlie.bushrow@gmail.com" }]
+requires-python = ">= 3.7"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["botocore", "pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+pythonpath = ["src"]
+testpaths = ["test"]
